@@ -20,10 +20,12 @@ import kotlinx.coroutines.launch
 import java.io.File
 import kotlin.coroutines.CoroutineContext
 import com.example.documentscanner.BuildConfig
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-
+@HiltViewModel
 //Here We Created A ViewModel Which Performs data and Secure the Activity
-class MainViewModel(private val coroutineContext: CoroutineContext):ViewModel() {
+class MainViewModel @Inject constructor(private val coroutineContext: CoroutineContext):ViewModel() {
 
     //here we create A private state which gets the data Privately in the mutableStateFlow
     private val _State: MutableStateFlow<ViewImagesState> = MutableStateFlow(ViewImagesState())
