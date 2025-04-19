@@ -51,7 +51,15 @@ android {
 }
 
 dependencies {
-// ViewModel
+
+
+    // ViewModel
+    val lifecycle_version = "2.8.7"
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    //fragment
+    val fragment_version = "1.8.6"
+    implementation("androidx.fragment:fragment-ktx:$fragment_version")
+// hilt
     implementation(libs.hilt.android)
     implementation(libs.androidx.navigation.compose)
     kapt(libs.hilt.android.compiler)
