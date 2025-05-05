@@ -11,6 +11,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
+        multiDexEnabled  = true
         applicationId = "com.example.documentscanner"
         minSdk = 27
         targetSdk = 35
@@ -52,7 +53,13 @@ android {
 
 dependencies {
 
+    implementation(libs.poi.ooxml.lite)
 
+    //Text Ml Kit
+    implementation ("com.google.mlkit:text-recognition:16.0.1")
+
+
+    implementation(libs.androidx.camera.core)
     // ViewModel
     val lifecycle_version = "2.8.7"
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
@@ -67,6 +74,7 @@ dependencies {
     //Coil For Image
         implementation(libs.coil.compose)
 
+    implementation ("androidx.multidex:multidex:2.0.1")
 
     implementation("androidx.core:core:1.15.0")
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -83,4 +91,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
+    implementation ("androidx.activity:activity-compose:1.7.2")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation ("androidx.compose.ui:ui:1.5.4")
+    implementation ("androidx.compose.material:material:1.5.4")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.5.4")
 }
