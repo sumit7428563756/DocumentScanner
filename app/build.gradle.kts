@@ -53,6 +53,10 @@ android {
 
 dependencies {
 
+    //Lottie Animation
+    implementation("com.airbnb.android:lottie-compose:6.0.0")
+    //SplashScreen
+    implementation(libs.androidx.core.splashscreen)
 
     implementation("com.google.dagger:hilt-android:2.56.1")
     ksp("com.google.dagger:hilt-compiler:2.56.1")

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="Theme.SplashScreen.ComposeSplash" parent="Theme.SplashScreen.IconBackground">
+
+      <item name="windowSplashScreenBackground">#906929</item>
+      <item name="windowSplashScreenAnimatedIcon">@drawable/free_pdf_converters</item>
+      <item name="windowSplashScreenIconBackgroundColor">#FFFF</item>
+      <item name="postSplashScreenTheme">@style/Theme.SplashScreen.ComposeSplash</item>
+  </style>
+    
+</resources>

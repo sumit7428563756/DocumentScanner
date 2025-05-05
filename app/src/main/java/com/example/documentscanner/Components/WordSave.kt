@@ -36,9 +36,7 @@ fun createDocxFromText(context: Context, text: String): Uri? {
 
 fun createSimpleDocx(text: String, outputStream: OutputStream) {
   val escapedText = text.replace("&", "&amp;")
-//    .replace("<", "&lt;")
-//    .replace(">", "&gt;")
-//    .replace("\n", "</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">")
+
     .replace("<", "&lt;")
     .replace(">", "&gt;")
     .split("\n")

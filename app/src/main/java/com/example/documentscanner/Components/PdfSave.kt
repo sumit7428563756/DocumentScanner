@@ -39,14 +39,6 @@ fun saveTextAsPdf(context: Context, text: String) {
     }
 
     pdfDocument.finishPage(page)
-
-//    val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName)
-//    pdfDocument.writeTo(FileOutputStream(file))
-//    pdfDocument.close()
-
-
-//    Toast.makeText(context, "PDF saved to: ${file.absolutePath}", Toast.LENGTH_LONG).show()
-
     val resolver = context.contentResolver
     val contentValues = ContentValues().apply {
         put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName)

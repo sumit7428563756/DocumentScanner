@@ -17,7 +17,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.documentscanner.Navigation.navigate
 
 import com.example.documentscanner.View.ImagePickerScreen
 import com.example.documentscanner.ViewModel.ImagePicViewModoel
@@ -34,12 +36,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        installSplashScreen()
         setContent {
-            val viewModel: ImagePicViewModoel = viewModel()
+           val viewModel: ImagePicViewModoel = viewModel()
             DocumentScannerTheme {
                 Surface(modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background){
-                    ImagePickerScreen(viewModel = viewModel)
+                  navigate(viewModel = viewModel)
                 }
             }
         }

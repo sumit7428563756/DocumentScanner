@@ -1,83 +1,71 @@
 package com.example.documentscanner.View
 
 import android.Manifest
-import android.app.Activity
-import android.content.ContentValues
-import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
-import android.os.Environment
-import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import coil.compose.rememberAsyncImagePainter
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.documentscanner.Components.AppBar
 import com.example.documentscanner.Components.Appbar
 import com.example.documentscanner.Components.recognizeTextFromImage
 import com.example.documentscanner.Components.saveTextAsPdf
-import com.example.documentscanner.Model.createImageUri
+import com.example.documentscanner.Model.saveImageToGallery
 import com.example.documentscanner.R
 import com.example.documentscanner.ViewModel.ImagePicViewModoel
 import createDocxFromText
-import java.io.File
 
 
 @Composable
-fun ImagePickerScreen(viewModel : ImagePicViewModoel,navController: NavController) {
+fun ImagePicScreen(viewModel : ImagePicViewModoel,navController: NavController) {
+
     val context = LocalContext.current
 
-    val cameraPermission = Manifest.permission.CAMERA
     val permissionState = remember { mutableStateOf(false) }
-
 
     val imageuri = viewModel.imageUri
     val capturedImageuri = viewModel.capturedImageUri
     val recognizedtext = viewModel.recognizedText
+
+    val cameraPermission = Manifest.permission.CAMERA
 
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -87,51 +75,40 @@ fun ImagePickerScreen(viewModel : ImagePicViewModoel,navController: NavControlle
             }
         }
 
-
-    val launcherCamera =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success) {
-                viewModel.SetImageUri(viewModel.capturedImageUri)
-                recognizeTextFromImage(context, viewModel.capturedImageUri!!) {
+    val launcherGallery =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                viewModel.SetImageUri(it)
+                saveImageToGallery(context, it)
+                recognizeTextFromImage(context, it) {
                     viewModel.SetRecognizedText(it)
                 }
-            } else {
-                Toast.makeText(context, "Camera capture failed", Toast.LENGTH_SHORT).show()
             }
         }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-        , horizontalAlignment = Alignment.CenterHorizontally
+            .verticalScroll(rememberScrollState()),
+         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AppBar(navController = navController)
-        Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
-            ) {
+        Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
             Button(onClick = {
-
                 val granted = ContextCompat.checkSelfPermission(
                     context,
                     cameraPermission
                 ) == PackageManager.PERMISSION_GRANTED
                 if (granted) {
-                    val uri = createImageUri(context)
-                    if (uri != null) {
-                        viewModel.SetCapturedImageUri(uri)
-                        launcherCamera.launch(uri)
-                    } else {
-                        Toast.makeText(context, "Failed to open Camera", Toast.LENGTH_SHORT).show()
-                    }
+                    launcherGallery.launch("image/*")
                 } else {
                     launcher.launch(cameraPermission)
                 }
-            }, colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Black
-            ), shape = RoundedCornerShape(8.dp)) {
-                Text("Open Camera")
+            },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black
+                ), shape = RoundedCornerShape(8.dp) ) {
+                Text("Pick from Gallery")
             }
-
             Spacer(modifier = Modifier.height(10.dp))
             imageuri?.let { uri ->
                 AsyncImage(
@@ -173,7 +150,9 @@ fun ImagePickerScreen(viewModel : ImagePicViewModoel,navController: NavControlle
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 20.dp)
+                            .padding(horizontal = 20.dp),
+                        horizontalArrangement = Arrangement.Center, // 👈 This centers the items
+                        verticalAlignment = Alignment.CenterVertically // Optional: Align items vertically
                     ) {
                         Box(modifier = Modifier
                             .height(50.dp)
@@ -223,3 +202,6 @@ fun ImagePickerScreen(viewModel : ImagePicViewModoel,navController: NavControlle
         }
     }
 }
+
+
+
