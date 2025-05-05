@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import coil.compose.rememberAsyncImagePainter
-import androidx.camera.core.Camera
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -59,7 +58,9 @@ import com.example.documentscanner.Components.recognizeTextFromImage
 import com.example.documentscanner.Components.saveTextAsPdf
 import com.example.documentscanner.R
 import com.example.documentscanner.ViewModel.ImagePicViewModoel
+import com.yalantis.ucrop.UCrop
 import createDocxFromText
+import java.io.File
 
 
 @Composable
@@ -96,13 +97,29 @@ fun ImagePickerScreen(viewModel : ImagePicViewModoel) {
         }
         }
 
+    val cropLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val resultUri = UCrop.getOutput(result.data!!)
+            resultUri?.let { uri ->
+                viewModel.SetImageUri(uri)
+                saveImageToGallery(context, uri)
+                recognizeTextFromImage(context, uri) {
+                    viewModel.SetRecognizedText(it)
+                }
+            }
+        }
+    }
+
+
     val launcherGallery = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
-            viewModel.SetImageUri(it)
-            saveImageToGallery(context, it)
-            recognizeTextFromImage(context, it) {
-                viewModel.SetRecognizedText(it)
-            }
+            val destinationUri = Uri.fromFile(File(context.cacheDir, "cropped_${System.currentTimeMillis()}.jpg"))
+            val uCrop = UCrop.of(it, destinationUri)
+                .withAspectRatio(1f, 1f)
+                .withMaxResultSize(1080, 1080)
+            cropLauncher.launch(uCrop.getIntent(context))
         }
     }
 
@@ -168,6 +185,7 @@ fun ImagePickerScreen(viewModel : ImagePicViewModoel) {
             Text(
                 text = recognizedtext,
                 style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp)

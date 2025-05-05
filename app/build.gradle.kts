@@ -2,8 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -53,28 +51,27 @@ android {
 
 dependencies {
 
-    implementation(libs.poi.ooxml.lite)
+    //for Ucrop the Image
+    implementation ("com.github.yalantis:ucrop:2.2.8")
+
 
     //Text Ml Kit
     implementation ("com.google.mlkit:text-recognition:16.0.1")
 
 
-    implementation(libs.androidx.camera.core)
     // ViewModel
-    val lifecycle_version = "2.8.7"
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
-    //fragment
-    val fragment_version = "1.8.6"
-    implementation("androidx.fragment:fragment-ktx:$fragment_version")
-// hilt
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.navigation.compose)
-    kapt(libs.hilt.android.compiler)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+
+    // ViewModel for Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+
+
     
     //Coil For Image
         implementation(libs.coil.compose)
 
-    implementation ("androidx.multidex:multidex:2.0.1")
+    //Multidex
+        implementation ("androidx.multidex:multidex:2.0.1")
 
     implementation("androidx.core:core:1.15.0")
     implementation(libs.androidx.lifecycle.runtime.ktx)
