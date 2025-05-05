@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp") // <-- use KSP, not KAPT
 }
 
 android {
@@ -51,8 +53,14 @@ android {
 
 dependencies {
 
-    //for Ucrop the Image
-    implementation ("com.github.yalantis:ucrop:2.2.8")
+
+    implementation("com.google.dagger:hilt-android:2.56.1")
+    ksp("com.google.dagger:hilt-compiler:2.56.1")
+
+    // Optional: Hilt Navigation Compose or ViewModel support
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+
 
 
     //Text Ml Kit

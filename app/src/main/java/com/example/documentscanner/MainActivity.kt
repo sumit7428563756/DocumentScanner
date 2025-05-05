@@ -24,10 +24,10 @@ import com.example.documentscanner.ViewModel.ImagePicViewModoel
 
 
 import com.example.documentscanner.ui.theme.DocumentScannerTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 
-
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @RequiresApi(Build.VERSION_CODES.P)

@@ -58,7 +58,6 @@ import com.example.documentscanner.Components.recognizeTextFromImage
 import com.example.documentscanner.Components.saveTextAsPdf
 import com.example.documentscanner.R
 import com.example.documentscanner.ViewModel.ImagePicViewModoel
-import com.yalantis.ucrop.UCrop
 import createDocxFromText
 import java.io.File
 
@@ -97,29 +96,13 @@ fun ImagePickerScreen(viewModel : ImagePicViewModoel) {
         }
         }
 
-    val cropLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val resultUri = UCrop.getOutput(result.data!!)
-            resultUri?.let { uri ->
-                viewModel.SetImageUri(uri)
-                saveImageToGallery(context, uri)
-                recognizeTextFromImage(context, uri) {
-                    viewModel.SetRecognizedText(it)
-                }
-            }
-        }
-    }
-
-
     val launcherGallery = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
-            val destinationUri = Uri.fromFile(File(context.cacheDir, "cropped_${System.currentTimeMillis()}.jpg"))
-            val uCrop = UCrop.of(it, destinationUri)
-                .withAspectRatio(1f, 1f)
-                .withMaxResultSize(1080, 1080)
-            cropLauncher.launch(uCrop.getIntent(context))
+            viewModel.SetImageUri(it)
+            saveImageToGallery(context, it)
+            recognizeTextFromImage(context, it) {
+                viewModel.SetRecognizedText(it)
+            }
         }
     }
 

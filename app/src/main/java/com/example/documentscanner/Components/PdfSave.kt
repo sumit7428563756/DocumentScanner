@@ -16,21 +16,26 @@ fun saveTextAsPdf(context: Context, text: String) {
 
     val fileName = "RecognizedText_${System.currentTimeMillis()}.pdf"
     val pdfDocument = PdfDocument()
-    val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
+    val pageWidth = 595
+    val pageHeight = 842
+    val pageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1).create()
     val page = pdfDocument.startPage(pageInfo)
 
     val canvas = page.canvas
     val paint = Paint().apply {
         color = Color.BLACK
         textSize = 12f
+        textAlign = Paint.Align.LEFT
     }
 
     val lines = text.split("\n")
-    var y = 30f
+    var y = 40f
 
     for (line in lines) {
-        canvas.drawText(line, 10f, y, paint)
-        y += paint.textSize + 8
+        val textWidth = paint.measureText(line)
+        val x = (pageWidth - textWidth) / 2  // Center horizontally
+        canvas.drawText(line, x, y, paint)
+        y += paint.textSize + 12
     }
 
     pdfDocument.finishPage(page)
@@ -57,7 +62,7 @@ fun saveTextAsPdf(context: Context, text: String) {
         resolver.openOutputStream(uri).use { outputStream ->
             pdfDocument.writeTo(outputStream)
         }
-        Toast.makeText(context, "PDF saved as $fileName", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "PDF saved as $fileName.pdf", Toast.LENGTH_LONG).show()
     } else {
         Toast.makeText(context, "Failed to create file", Toast.LENGTH_SHORT).show()
     }
