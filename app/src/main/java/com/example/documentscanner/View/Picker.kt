@@ -109,6 +109,7 @@ fun ImagePickerScreen(viewModel : ImagePicViewModoel,navController: NavControlle
         AppBar(navController = navController)
         Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
             ) {
+            Spacer(modifier = Modifier.height(50.dp))
             Button(onClick = {
 
                 val granted = ContextCompat.checkSelfPermission(

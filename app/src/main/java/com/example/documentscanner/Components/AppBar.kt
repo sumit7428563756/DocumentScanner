@@ -18,9 +18,9 @@ import com.example.documentscanner.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Appbar(){
-    TopAppBar(title = { Text(text = "  Document Scanner", fontSize = 20.sp, fontWeight = FontWeight.W400, color = Color.White)},
+    TopAppBar(title = { Text(text = "  Document Scanner", fontSize = 16.sp, fontWeight = FontWeight.W400, color = Color.White)},
         navigationIcon = { Icon(painter = painterResource(id = R.drawable.free_pdf), tint = Color.Unspecified, contentDescription = null,
-            modifier = Modifier.size(50.dp))},
+            modifier = Modifier.size(30.dp))},
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Black
         ))

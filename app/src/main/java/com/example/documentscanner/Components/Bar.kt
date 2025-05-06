@@ -25,11 +25,11 @@ import com.example.documentscanner.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(navController: NavController){
-    TopAppBar(title = { Text(text = "  Document Scanner", fontSize = 20.sp, fontWeight = FontWeight.W400, color = Color.White) },
+    TopAppBar(title = { Text(text = "  Document Scanner", fontSize = 16.sp, fontWeight = FontWeight.W400, color = Color.White) },
         navigationIcon = {
             IconButton(onClick = {navController.popBackStack() }) {
                 Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription =null , tint = Color.White,
-                    modifier = Modifier.size(50.dp))
+                    modifier = Modifier.size(30.dp))
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
